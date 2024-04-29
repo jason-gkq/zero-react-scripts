@@ -30,6 +30,7 @@ const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
 const params = args.slice(scriptIndex + 1);
 
 if (['build', 'start'].includes(script)) {
+  process.env.BUILD_ENV = 'unknown';
   if (params.length > 0) {
     params.forEach((p) => {
       const tmpArg = p.trim().split('=');
