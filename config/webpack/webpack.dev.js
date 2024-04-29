@@ -78,6 +78,7 @@ export default merge(
       new CaseSensitivePathsPlugin(),
       new ForkTsCheckerWebpackPlugin({
         typescript: {
+          // configFile: paths.appTsConfig,
           memoryLimit: 4096,
         },
       }),

@@ -101,6 +101,7 @@ export default merge(
       new FriendlyErrorsWebpackPlugin(),
       new ForkTsCheckerWebpackPlugin({
         typescript: {
+          // configFile: paths.appTsConfig,
           memoryLimit: 4096,
         },
       }),
