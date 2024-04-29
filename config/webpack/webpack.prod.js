@@ -99,7 +99,11 @@ export default merge(
       }),
       copyOptions && new CopyPlugin(copyOptions),
       new FriendlyErrorsWebpackPlugin(),
-      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: {
+          memoryLimit: 4096,
+        },
+      }),
     ].filter(Boolean),
     optimization: {
       minimize: true,

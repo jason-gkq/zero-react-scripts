@@ -76,7 +76,11 @@ export default merge(
       }),
       copyOptions && new CopyPlugin(copyOptions),
       new CaseSensitivePathsPlugin(),
-      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: {
+          memoryLimit: 4096,
+        },
+      }),
       new FriendlyErrorsWebpackPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin(),
