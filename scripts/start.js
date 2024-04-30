@@ -13,7 +13,7 @@ const {
   raw: { productConfig },
 } = getClientEnvironment();
 
-const { devServer = { port: 8080, host: 'localhost' } } =
+const { devServer = { port: 3000, host: 'localhost' } } =
   productConfig.webpackConfig || {};
 
 const options = {
