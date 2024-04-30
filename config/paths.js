@@ -65,18 +65,17 @@ module.exports = {
   appSrc: resolveApp("src"),
   appTsConfig: resolveApp("tsconfig.json"),
   appEnvConfig: resolveApp(`env/env.${proEnv.env}.js`),
-  yarnLockFile: resolveApp("yarn.lock"),
   // testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   // proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp("node_modules"),
-  swSrc: resolveModule(resolveApp, "src/serviceWorker"),
+  // swSrc: resolveModule(resolveApp, "src/serviceWorker"),
   publicUrlOrPath,
   // These properties only exist before ejecting:
   ownPath: resolveOwn("."),
   ownNodeModules: resolveOwn("node_modules"), // This is empty on npm 3
   appTypeDeclarations: resolveApp("src/global.d.ts"),
-  dllsPath: resolveOwn("dll"),
-  dllOutputPath: resolveOwn("dll/*.dll.js"),
+  // dllsPath: resolveOwn("dll"),
+  // dllOutputPath: resolveOwn("dll/*.dll.js"),
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;
