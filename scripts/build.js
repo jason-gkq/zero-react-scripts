@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-process.env.BABEL_ENV = "production";
-process.env.NODE_ENV = "production";
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
-const webpack = require("webpack");
+const webpack = require('webpack');
 // const fs = require("fs");
 // const paths = require("../config/paths");
-const config = require("../config/webpack/webpack.prod");
+const config = require('../config/webpack/webpack.prod');
 
 let compiler = webpack(config);
 

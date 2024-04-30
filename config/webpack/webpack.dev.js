@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
-const paths = require("../paths");
-const { getClientEnvironment, getAlias } = require("../env");
+const paths = require('../paths');
+const { getClientEnvironment, getAlias } = require('../env');
 
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const postcssNormalize = require("postcss-normalize");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
-const { merge } = require("webpack-merge");
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const postcssNormalize = require('postcss-normalize');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const { merge } = require('webpack-merge');
 
 const env = getClientEnvironment();
 
@@ -27,9 +27,9 @@ const { headScripts = [], copyOptions } = privateConfig || {};
 
 module.exports = merge(
   {
-    mode: "development",
+    mode: 'development',
     bail: false,
-    devtool: "cheap-module-source-map",
+    devtool: 'cheap-module-source-map',
     entry: {
       main: paths.appIndexJs,
       // Runtime code for hot module replacement
@@ -40,12 +40,12 @@ module.exports = merge(
     output: {
       pathinfo: false,
       path: paths.appBuild,
-      filename: "[name].js",
-      chunkFilename: "[name].chunk.js",
-      publicPath: "/", // paths.publicUrlOrPath,
+      filename: '[name].js',
+      chunkFilename: '[name].chunk.js',
+      publicPath: '/', // paths.publicUrlOrPath,
       // assetModuleFilename: "[name][ext]",
       devtoolModuleFilenameTemplate: (info) =>
-        path.resolve(info.absoluteResourcePath).replace(/\\/g, "/"),
+        path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
       // clean: true,
     },
 
@@ -55,13 +55,13 @@ module.exports = merge(
         inject: true,
         favicon: `${paths.appPublic}/favicon.ico`,
         headScripts: headScripts,
-        appName: appName ? appName : "root",
+        appName: appName ? appName : 'root',
         defaultTitle: layout.title,
       }),
       new webpack.DefinePlugin(env.stringified),
       new webpack.ProvidePlugin({
         // process: "process/browser",
-        Buffer: ["buffer", "Buffer"],
+        Buffer: ['buffer', 'Buffer'],
       }),
       new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
@@ -69,7 +69,12 @@ module.exports = merge(
       }),
       copyOptions && new CopyPlugin(copyOptions),
       new CaseSensitivePathsPlugin(),
-      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: {
+          // configFile: paths.appTsConfig,
+          memoryLimit: 4096,
+        },
+      }),
       new FriendlyErrorsWebpackPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin(),
@@ -79,14 +84,14 @@ module.exports = merge(
       removeAvailableModules: false,
       removeEmptyChunks: false,
       splitChunks: false,
-      runtimeChunk: "single",
+      runtimeChunk: 'single',
     },
     resolve: {
       extensions: paths.moduleFileExtensions.map((ext) => `.${ext}`),
       alias: getAlias(),
       fallback: {
         // "stream": require.resolve("stream-browserify"),
-        buffer: require.resolve("buffer/"),
+        buffer: require.resolve('buffer/'),
       },
     },
     performance: false,
@@ -98,46 +103,46 @@ module.exports = merge(
             {
               test: /\.(js|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              loader: require.resolve("babel-loader"),
+              loader: require.resolve('babel-loader'),
               options: {
                 presets: [
                   [
-                    "@babel/preset-env",
+                    '@babel/preset-env',
                     {
-                      useBuiltIns: "entry",
+                      useBuiltIns: 'entry',
                       corejs: 3,
                     },
                   ],
                   [
-                    "@babel/preset-react",
+                    '@babel/preset-react',
                     {
                       development: true,
                       useBuiltIns: true,
-                      runtime: "automatic",
+                      runtime: 'automatic',
                     },
                   ],
-                  "@babel/preset-typescript",
+                  '@babel/preset-typescript',
                 ].filter(Boolean),
                 plugins: [
-                  ["@babel/plugin-proposal-decorators", { legacy: true }],
+                  ['@babel/plugin-proposal-decorators', { legacy: true }],
                   [
-                    require("@babel/plugin-transform-runtime"),
+                    require('@babel/plugin-transform-runtime'),
                     {
                       corejs: false,
                       helpers: true,
-                      version: require("@babel/runtime-corejs3/package.json")
+                      version: require('@babel/runtime-corejs3/package.json')
                         .version,
                       regenerator: true,
                     },
                   ],
                   [
-                    require("babel-plugin-transform-react-remove-prop-types")
+                    require('babel-plugin-transform-react-remove-prop-types')
                       .default,
                     {
                       removeImport: true,
                     },
                   ],
-                  require.resolve("react-refresh/babel"),
+                  require.resolve('react-refresh/babel'),
                 ].filter(Boolean),
               },
             },
@@ -153,31 +158,31 @@ module.exports = merge(
               include: /src/,
               use: [
                 {
-                  loader: require.resolve("style-loader"),
+                  loader: require.resolve('style-loader'),
                   options: {
                     esModule: true,
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -187,7 +192,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -203,31 +208,31 @@ module.exports = merge(
               exclude: /\.lazy\.(less|css)$/,
               use: [
                 {
-                  loader: require.resolve("style-loader"),
+                  loader: require.resolve('style-loader'),
                   options: {
                     esModule: true,
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -237,7 +242,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -253,31 +258,31 @@ module.exports = merge(
               exclude: /\.module\.(less|css)$/,
               use: [
                 {
-                  loader: require.resolve("style-loader"),
+                  loader: require.resolve('style-loader'),
                   options: {
                     esModule: true,
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -287,7 +292,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -302,13 +307,13 @@ module.exports = merge(
               include: /node_modules/,
               use: [
                 {
-                  loader: "style-loader",
+                  loader: 'style-loader',
                 },
                 {
-                  loader: "css-loader",
+                  loader: 'css-loader',
                 },
                 {
-                  loader: "less-loader",
+                  loader: 'less-loader',
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -321,12 +326,12 @@ module.exports = merge(
             {
               test: /\.svg$/i,
               issuer: /\.[jt]sx?$/,
-              type: "javascript/auto",
-              use: ["@svgr/webpack", "url-loader"],
+              type: 'javascript/auto',
+              use: ['@svgr/webpack', 'url-loader'],
             },
             {
               test: /\.(png|jpg|jpeg|gif)$/,
-              type: "asset/resource",
+              type: 'asset/resource',
             },
           ],
         },

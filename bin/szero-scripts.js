@@ -22,8 +22,31 @@ const args = process.argv.slice(2);
 const scriptIndex = args.findIndex((x) => x === "build" || x === "start");
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
+const params = args.slice(scriptIndex + 1);
 
 if (["build", "start"].includes(script)) {
+  process.env.BUILD_ENV = "unknown";
+  if (params.length > 0) {
+    params.forEach((p) => {
+      const tmpArg = p.trim().split("=");
+      if (tmpArg.length == 2) {
+        if (tmpArg[0] == "env") {
+          process.env.BUILD_ENV = tmpArg[1];
+        } else {
+          process.env[tmpArg[0].replace(/\W+/g, "")] = tmpArg[1];
+        }
+      }
+    });
+  }
+
+  if (script == "start") {
+    process.env.BABEL_ENV = "development";
+    process.env.NODE_ENV = "development";
+  } else {
+    process.env.BABEL_ENV = "production";
+    process.env.NODE_ENV = "production";
+  }
+
   const result = spawn.sync(
     process.execPath,
     nodeArgs

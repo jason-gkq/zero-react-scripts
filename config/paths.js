@@ -3,15 +3,13 @@
 const path = require("path");
 const fs = require("fs");
 
-const proEnv = require("./params");
-
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 let publicUrlOrPath = "/";
 
 const envComFilePath = `${resolveApp("env")}/env.com.js`;
-const envFilePath = `${resolveApp("env")}/env.${proEnv.env}.js`;
+const envFilePath = `${resolveApp("env")}/env.${process.env.BUILD_ENV}.js`;
 
 if (fs.existsSync(envComFilePath)) {
   const { defineConfig } = require(envComFilePath);
@@ -64,7 +62,7 @@ module.exports = {
   appPackageJson: resolveApp("package.json"),
   appSrc: resolveApp("src"),
   appTsConfig: resolveApp("tsconfig.json"),
-  appEnvConfig: resolveApp(`env/env.${proEnv.env}.js`),
+  appEnvConfig: resolveApp(`env/env.${process.env.BUILD_ENV}.js`),
   // testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   // proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp("node_modules"),

@@ -1,29 +1,28 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
+const fs = require('fs');
 // const path = require('path');
-const paths = require("./paths");
-const proEnv = require("./params");
+const paths = require('./paths');
 
 // Make sure that including paths.js after env.js will read .env variables.
-delete require.cache[require.resolve("./paths")];
+delete require.cache[require.resolve('./paths')];
 
 function getClientEnvironment() {
   const raw = Object.keys(process.env).reduce((env, key) => {
     if (
       [
-        "author",
-        "BABEL_ENV",
-        "NODE_ENV",
-        "LANG",
-        "npm_package_name",
-        "LaunchInstanceID",
-        "npm_package_version",
-        "npm_lifecycle_event",
-        "npm_lifecycle_script",
-        "npm_package_main",
-        "npm_package_type",
-        "publicUrlOrPath",
+        'author',
+        'BABEL_ENV',
+        'NODE_ENV',
+        'LANG',
+        'npm_package_name',
+        'LaunchInstanceID',
+        'npm_package_version',
+        'npm_lifecycle_event',
+        'npm_lifecycle_script',
+        'npm_package_main',
+        'npm_package_type',
+        'publicUrlOrPath',
       ].includes(key)
     ) {
       env[key] = process.env[key];
@@ -31,7 +30,10 @@ function getClientEnvironment() {
     return env;
   }, {});
 
-  let productConfig = { ENV: proEnv.env, buildTime: new Date().getTime() };
+  let productConfig = {
+    ENV: process.env.BUILD_ENV,
+    buildTime: new Date().getTime(),
+  };
   if (fs.existsSync(`${paths.appPackageJson}`)) {
     const { author, version } = require(`${paths.appPackageJson}`);
     productConfig.author = author;
@@ -49,9 +51,9 @@ function getClientEnvironment() {
   raw.productConfig = productConfig;
   // Stringify all values so we can feed into webpack DefinePlugin
   const stringified = {
-    "process.env": Object.keys(raw).reduce((env, key) => {
-      if (key == "productConfig") {
-        const { webpackConfig, ...restValue } = raw[key];
+    'process.env': Object.keys(raw).reduce((env, key) => {
+      if (key == 'productConfig') {
+        const { webpackConfig, viteConfig, ...restValue } = raw[key];
         env[key] = JSON.stringify(restValue);
       } else {
         env[key] = JSON.stringify(raw[key]);
@@ -70,15 +72,15 @@ function getAlias() {
       if (/\/$/.test(compilerOptions.paths[key])) {
         alias[key.trim().slice(0, -1)] =
           paths.appPath +
-          "/" +
+          '/' +
           compilerOptions.paths[key][0].trim().slice(0, -1);
       } else if (/\/\*$/.test(compilerOptions.paths[key])) {
         alias[key.trim().slice(0, -2)] =
           paths.appPath +
-          "/" +
+          '/' +
           compilerOptions.paths[key][0].trim().slice(0, -2);
       } else {
-        alias[key] = paths.appPath + "/" + compilerOptions.paths[key][0].trim();
+        alias[key] = paths.appPath + '/' + compilerOptions.paths[key][0].trim();
       }
     });
   }

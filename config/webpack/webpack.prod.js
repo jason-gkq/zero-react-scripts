@@ -1,25 +1,25 @@
-"use strict";
+'use strict';
 
-const paths = require("../paths");
-const { getClientEnvironment, getAlias } = require("../env");
+const paths = require('../paths');
+const { getClientEnvironment, getAlias } = require('../env');
 
 // const fs = require("fs");
-const path = require("path");
-const webpack = require("webpack");
+const path = require('path');
+const webpack = require('webpack');
 
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const postcssNormalize = require("postcss-normalize");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const postcssNormalize = require('postcss-normalize');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin"); // dll 解析
-const InterpolateHtmlPlugin = require("../../lib/InterpolateHtmlPlugin");
+const InterpolateHtmlPlugin = require('../../lib/InterpolateHtmlPlugin');
 // const WorkboxPlugin = require("workbox-webpack-plugin"); // production
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
-const { merge } = require("webpack-merge");
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const { merge } = require('webpack-merge');
 
 const env = getClientEnvironment();
 // const swSrc = fs.existsSync(paths.swSrc);
@@ -32,13 +32,13 @@ const { privateConfig, publicUrlOrPath, devServer, ...restConfig } =
   webpackConfig;
 const { headScripts = [], copyOptions } = privateConfig || {};
 
-const svgToMiniDataURI = require("mini-svg-data-uri");
+const svgToMiniDataURI = require('mini-svg-data-uri');
 
 module.exports = merge(
   {
-    mode: "production",
+    mode: 'production',
     bail: true,
-    devtool: "source-map",
+    devtool: 'source-map',
     entry: {
       main: paths.appIndexJs,
     },
@@ -46,13 +46,13 @@ module.exports = merge(
       hashDigestLength: 8,
       pathinfo: false,
       path: paths.appBuild,
-      filename: "static/pages/[name].[contenthash].js",
-      chunkFilename: "static/pages/[name].[contenthash].chunk.js",
+      filename: 'static/pages/[name].[contenthash].js',
+      chunkFilename: 'static/pages/[name].[contenthash].chunk.js',
       publicPath: paths.publicUrlOrPath,
       devtoolModuleFilenameTemplate: (info) =>
         path
           .relative(paths.appSrc, info.absoluteResourcePath)
-          .replace(/\\/g, "/"),
+          .replace(/\\/g, '/'),
     },
     // @ts-ignore
     plugins: [
@@ -62,7 +62,7 @@ module.exports = merge(
         inject: true,
         favicon: `${paths.appPublic}/favicon.ico`,
         headScripts: headScripts,
-        appName: appName ? appName : "root",
+        appName: appName ? appName : 'root',
         defaultTitle: layout.title,
         minify: {
           removeComments: true,
@@ -78,8 +78,8 @@ module.exports = merge(
         },
       }),
       new MiniCssExtractPlugin({
-        filename: "static/pages/[name].[contenthash].css",
-        chunkFilename: "static/pages/[name].[contenthash].chunk.css",
+        filename: 'static/pages/[name].[contenthash].css',
+        chunkFilename: 'static/pages/[name].[contenthash].chunk.css',
         ignoreOrder: true, // 忽略有关顺序冲突的警告
       }),
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
@@ -88,7 +88,7 @@ module.exports = merge(
       new webpack.DefinePlugin(env.stringified),
       new webpack.ProvidePlugin({
         // process: "process/browser",
-        Buffer: ["buffer", "Buffer"],
+        Buffer: ['buffer', 'Buffer'],
       }),
       new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
@@ -96,7 +96,12 @@ module.exports = merge(
       }),
       copyOptions && new CopyPlugin(copyOptions),
       new FriendlyErrorsWebpackPlugin(),
-      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: {
+          // configFile: paths.appTsConfig,
+          memoryLimit: 4096,
+        },
+      }),
     ].filter(Boolean),
     optimization: {
       minimize: true,
@@ -125,7 +130,7 @@ module.exports = merge(
           parallel: true,
           minimizerOptions: {
             preset: [
-              "default",
+              'default',
               {
                 discardComments: { removeAll: true },
               },
@@ -134,7 +139,7 @@ module.exports = merge(
         }),
       ],
       splitChunks: {
-        chunks: "all",
+        chunks: 'all',
         minSize: 500000, // 最小不小于 200k
         maxSize: 3348576,
         maxAsyncRequests: 30,
@@ -143,7 +148,7 @@ module.exports = merge(
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
-            filename: "static/vendor/[name].[contenthash].chunk.js",
+            filename: 'static/vendor/[name].[contenthash].chunk.js',
             priority: -10,
             reuseExistingChunk: true,
           },
@@ -154,8 +159,8 @@ module.exports = merge(
           },
         },
       },
-      moduleIds: "deterministic",
-      chunkIds: "deterministic",
+      moduleIds: 'deterministic',
+      chunkIds: 'deterministic',
       runtimeChunk: {
         name: (entrypoint) => `runtime~${entrypoint.name}`,
       },
@@ -165,11 +170,11 @@ module.exports = merge(
       alias: getAlias(),
       fallback: {
         // "stream": require.resolve("stream-browserify"),
-        buffer: require.resolve("buffer/"),
+        buffer: require.resolve('buffer/'),
       },
     },
     performance: {
-      hints: "error",
+      hints: 'error',
       maxEntrypointSize: 40000000,
       maxAssetSize: 3348576,
     },
@@ -181,7 +186,7 @@ module.exports = merge(
             {
               test: /\.(js|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              loader: require.resolve("babel-loader"),
+              loader: require.resolve('babel-loader'),
               options: {
                 sourceMaps: true,
                 cacheDirectory: true,
@@ -189,37 +194,37 @@ module.exports = merge(
                 compact: true,
                 presets: [
                   [
-                    "@babel/preset-env",
+                    '@babel/preset-env',
                     {
                       // useBuiltIns: "usage",
-                      useBuiltIns: "entry",
+                      useBuiltIns: 'entry',
                       corejs: 3,
                     },
                   ],
                   [
-                    "@babel/preset-react",
+                    '@babel/preset-react',
                     {
                       development: false,
                       useBuiltIns: true,
-                      runtime: "automatic",
+                      runtime: 'automatic',
                     },
                   ],
-                  "@babel/preset-typescript",
+                  '@babel/preset-typescript',
                 ].filter(Boolean),
                 plugins: [
-                  ["@babel/plugin-proposal-decorators", { legacy: true }],
+                  ['@babel/plugin-proposal-decorators', { legacy: true }],
                   [
-                    require("@babel/plugin-transform-runtime"),
+                    require('@babel/plugin-transform-runtime'),
                     {
                       corejs: false,
                       helpers: true,
-                      version: require("@babel/runtime-corejs3/package.json")
+                      version: require('@babel/runtime-corejs3/package.json')
                         .version,
                       regenerator: true,
                     },
                   ],
                   [
-                    require("babel-plugin-transform-react-remove-prop-types")
+                    require('babel-plugin-transform-react-remove-prop-types')
                       .default,
                     {
                       removeImport: true,
@@ -246,25 +251,25 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -274,7 +279,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -296,25 +301,25 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -324,7 +329,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -346,25 +351,25 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("css-loader"),
+                  loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 2,
                     esModule: true,
                     modules: {
                       namedExport: true,
-                      localIdentName: "[local]",
+                      localIdentName: '[local]',
                     },
                   },
                 },
                 {
-                  loader: require.resolve("postcss-loader"),
+                  loader: require.resolve('postcss-loader'),
                   options: {
                     postcssOptions: {
                       plugins: () => [
-                        require("postcss-flexbugs-fixes"),
-                        require("postcss-preset-env")({
+                        require('postcss-flexbugs-fixes'),
+                        require('postcss-preset-env')({
                           autoprefixer: {
-                            flexbox: "no-2009",
+                            flexbox: 'no-2009',
                           },
                           stage: 3,
                         }),
@@ -374,7 +379,7 @@ module.exports = merge(
                   },
                 },
                 {
-                  loader: require.resolve("less-loader"),
+                  loader: require.resolve('less-loader'),
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -389,13 +394,13 @@ module.exports = merge(
               include: /node_modules/,
               use: [
                 {
-                  loader: "style-loader", // MiniCssExtractPlugin.loader,
+                  loader: 'style-loader', // MiniCssExtractPlugin.loader,
                 },
                 {
-                  loader: "css-loader",
+                  loader: 'css-loader',
                 },
                 {
-                  loader: "less-loader",
+                  loader: 'less-loader',
                   options: {
                     lessOptions: {
                       javascriptEnabled: true,
@@ -408,13 +413,13 @@ module.exports = merge(
             {
               test: /\.svg$/i,
               issuer: /\.[jt]sx?$/,
-              type: "javascript/auto",
+              type: 'javascript/auto',
               use: [
-                "@svgr/webpack",
+                '@svgr/webpack',
                 {
-                  loader: "url-loader",
+                  loader: 'url-loader',
                   options: {
-                    name: "static/media/[name].[contenthash:8].svg",
+                    name: 'static/media/[name].[contenthash:8].svg',
                     generator: (content) =>
                       svgToMiniDataURI(content.toString()),
                     limit: 8 * 1024,
@@ -441,9 +446,9 @@ module.exports = merge(
             // },
             {
               test: /\.(png|jpg|jpeg|gif)$/,
-              type: "asset/resource",
+              type: 'asset/resource',
               generator: {
-                filename: "static/media/[name].[contenthash][ext]",
+                filename: 'static/media/[name].[contenthash][ext]',
               },
             },
           ],

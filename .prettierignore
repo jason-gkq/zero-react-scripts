@@ -1,0 +1,9 @@
+
+dist
+es
+lib
+__tests__
+doc
+node_modules
+public
+script
